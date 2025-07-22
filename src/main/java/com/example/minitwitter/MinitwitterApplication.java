@@ -1,5 +1,6 @@
 package com.example.minitwitter;
 
+import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
