@@ -7,6 +7,7 @@ import com.example.minitwitter.mapper.PostMapper;
 import com.example.minitwitter.mapper.UserMapper;
 import com.example.minitwitter.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PostMapper postMapper;
     private final LikeMapper likeMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
@@ -36,6 +38,7 @@ public class UserService {
 
     public UserDto registerUser(final UserRegistrationDto userRegistrationDto) {
         User user = userMapper.mapToUser(userRegistrationDto);
+        user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         user.setRole(Role.USER);
         User saved = userRepository.save(user);
         return buildFullUserDto(saved);
@@ -58,7 +61,7 @@ public class UserService {
         if (!user.getPassword().equals(dto.getNewPassword())
                 && dto.getNewPassword().length() >= 8 && dto.getNewPassword().length() <= 20
                 && dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            user.setPassword(dto.getNewPassword());
+            user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             userRepository.save(user);
         }
     }

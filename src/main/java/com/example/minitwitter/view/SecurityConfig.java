@@ -20,6 +20,8 @@ public class SecurityConfig extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
         setLoginView(http, LoginView.class);
+
+        http.formLogin(form -> form.defaultSuccessUrl("/", true));
     }
 
     @Bean

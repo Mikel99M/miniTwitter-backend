@@ -45,7 +45,7 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
-        Optional<Like> existingLike = likeRepository.findByUserAndPost(user, post);
+        Optional<Like> existingLike = likeRepository.findByUserIdAndPostId(userId, postId);
 
         if (existingLike.isPresent()) {
             // Unlike
@@ -58,7 +58,6 @@ public class LikeService {
                     .build();
             likeRepository.save(like);
         }
-
     }
 
     public long getLikeCountByUser(Long userId) throws UserNotFoundException {
@@ -66,9 +65,8 @@ public class LikeService {
                 .getLikedByUser().size();
     }
 
-    public long getLikeCountOnPost(Long postId) throws PostNotFoundException {
-        return postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId))
-                .getLikes().size();
+    public long getLikeCountOnPost(Long postId) {
+        return likeRepository.countByPostId(postId);
     }
 
 
